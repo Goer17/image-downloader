@@ -36,6 +36,9 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
+# Other logs
+logs/
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
@@ -169,3 +172,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# MacOS
+.DS_Store
+
