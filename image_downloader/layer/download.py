@@ -3,7 +3,7 @@ import base64
 from pathlib import Path
 from abc import ABC, abstractmethod
 from typing import (
-    List
+    List, Dict
 )
 from requests_html import HTMLSession
 import requests
@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import quote_plus
 from urllib.parse import urlparse
 
-from utils.logger import logger
+from ..utils.logger import logger
 
 class URLCrawler(ABC):
     def __init__(self):
@@ -23,7 +23,7 @@ class URLCrawler(ABC):
         self,
         query: str,
         max_n: int = 10
-    ) -> List[str]:
+    ) -> List[Dict[str, str]]:
         pass
 
 class GoogleURLCrawler(URLCrawler):
@@ -51,9 +51,11 @@ class GoogleURLCrawler(URLCrawler):
             imgs = soup.find_all("img")
             urls = []
             for img in imgs:
-                if img.has_attr("id") and img["id"].startswith("dimg") and img.has_attr("src") and len(img["src"]) >= 4096:
-                    urls.append(img["src"])
-            return urls   
+                if img.has_attr("id") and img["id"].startswith("dimg") and img.has_attr("src") and len(img["src"]) >= 4096: # base64
+                    urls.append({"url": img["src"]})
+                    if len(urls) >= max_n:
+                        return urls
+            return urls
         
         except Exception as e:
             logger.error(f"GoogleDowloader.__call__() : {e}")
@@ -65,11 +67,12 @@ class Downloader:
         raise RuntimeError("Downloader is a static class.")
 
     @staticmethod
-    def download(urls: List[str], path: str | Path):
+    def download(urls: List[Dict[str, str]], path: str | Path):
         if not os.path.exists(path):
             os.makedirs(path)
 
-        for i, url in enumerate(urls):
+        for i, url_info in enumerate(urls):
+            url = url_info["url"]
             parsed = urlparse(url)
 
             if parsed.scheme in ("http", "https"):
