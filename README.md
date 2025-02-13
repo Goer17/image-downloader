@@ -1,10 +1,8 @@
 # Image Downloader
 
-**Image Downloader** is a lightweight Python script that helps you download images from Google.
+**Image Downloader** is a lightweight Python script that allows you to download images from the internet based on your search queries.
 
 Additionally, to meet custom requirements, I have integrated the OpenAI SDK into this project, allowing you to use their API to filter images based on your specifications.
-
-
 
 ### Installation
 
@@ -15,8 +13,6 @@ git clone https://github.com/Goer17/image-downloader.git
 ```bash
 pip install -e .
 ```
-
-
 
 ### Quick Start
 
@@ -53,4 +49,3 @@ urls = pipeline(
     <img src="assets/image_0.jpg" alt="image-0" width="256" height="256">
     <img src="assets/image_1.jpg" alt="image-1" width="256" height="256">
 </div>
-
