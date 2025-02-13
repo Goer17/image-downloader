@@ -12,7 +12,7 @@ def __logger():
 
     if not os.path.exists("logs"):
         os.makedirs("logs")
-    path = Path("logs") / f"{datetime.now().strftime("%Y-%m-%d")}.log"
+    path = Path("logs") / f"{datetime.now().strftime('%Y-%m-%d')}.log"
     
     file_handler = logging.FileHandler(path)
     file_handler.setLevel(logging.DEBUG)
