@@ -5,7 +5,10 @@ from abc import ABC, abstractmethod
 from typing import (
     List, Dict
 )
-from requests_html import HTMLSession
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -38,16 +41,18 @@ class GoogleURLCrawler(URLCrawler):
         if max_n <= 0:
             return []
         url = f"{self.url}/search?q={quote_plus(query)}&tbm=isch"
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0"
-        }
+        # headers = {
+        #     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0"
+        # }
+        options = Options()
+        options.add_argument("--headless")  # 无头模式
+        driver = webdriver.Chrome(options=options)
         
         try:
-            session = HTMLSession()
-            response = session.get(url, headers=headers)
-            response.html.render(timeout=20) # render the page
+            driver.get(url)
+            driver.implicitly_wait(10)
             
-            soup = BeautifulSoup(response.html.html, "html.parser")
+            soup = BeautifulSoup(driver.page_source, "html.parser")
             imgs = soup.find_all("img")
             urls = []
             for img in imgs:
